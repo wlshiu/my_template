@@ -51,7 +51,7 @@ extern "C" {
  *  declare the first node
  */
 #define DECLARE_LIST_HEAD(var) \
-	static struct llist var = {.next = &var, .prev = &var}
+    static struct llist var = {.next = &var, .prev = &var}
 
 
 /**
@@ -62,24 +62,24 @@ extern "C" {
 
 
 /**
- *  new node after act_list
+ *  new node insert to head of list
  */
-#define LLIST_NODE_ADD_AFTER(pllst, pNewNode)      \
-    do{ (pllst)->next->prev = (pNewNode);          \
-        (pNewNode)->next = (pllst)->next;          \
-        (pllst)->next  = pNewNode;                 \
-        (pNewNode)->prev = (pllst);                \
+#define LLIST_NODE_INSERT_HEAD(pllst, pNewListNode)    \
+    do{ (pllst)->next->prev = (pNewListNode);          \
+        (pNewListNode)->next = (pllst)->next;          \
+        (pllst)->next  = pNewListNode;                 \
+        (pNewListNode)->prev = (pllst);                \
     }while(0)
 
 
 /**
- *  new node before act_list
+ *  new node insert to tail of list
  */
-#define LLIST_NODE_ADD_BEFORE(pllst, pNewNode)     \
-    do{ (pllst)->prev->next = (pNewNode);          \
-        (pNewNode)->prev = (pllst)->prev;          \
-        (pllst)->prev  = (pNewNode);               \
-        (pNewNode)->next = (pllst);                \
+#define LLIST_NODE_INSERT_TAIL(pllst, pNewListNode)    \
+    do{ (pllst)->prev->next = (pNewListNode);          \
+        (pNewListNode)->prev = (pllst)->prev;          \
+        (pllst)->prev  = (pNewListNode);               \
+        (pNewListNode)->next = (pllst);                \
     }while(0)
 
 /**
@@ -102,12 +102,13 @@ extern "C" {
 
 /**
  * iterate over a list
- * @pllstCur:	the &struct list_head to use as a loop counter.
- * @pllstLst:	the head for your list.
+ * @pllstCur:   the &struct list_head to use as a loop counter.
+ * @pllstTmp:   another &struct list_head to use as temporary storage
+ * @pllstLst:   the head for your list.
  */
 #define LLIST_FOR_EACH(pllstCur, pllstTmp, pllstLst)            \
   for( pllstCur = (pllstLst)->next, pllstTmp = pllstCur->next;  \
-       pllstCur != (pllstLst);	                                \
+       pllstCur != (pllstLst);                                  \
        pllstCur = pllstTmp, pllstTmp = pllstCur->next )         \
 //=============================================================================
 //                  Structure Definition
@@ -116,7 +117,7 @@ extern "C" {
  * Simple doubly linked list implementation.
  */
 typedef struct llist {
-	struct llist    *next, *prev;
+    struct llist    *next, *prev;
 } llist_t;
 //=============================================================================
 //                  Global Data Definition
